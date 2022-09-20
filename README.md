@@ -1,6 +1,42 @@
 # Where To Go Today
 <h3>Description</h3>
-This is a simple service for the company's employees where restaurants can register and provide their daily lunch menus and employees can vote for the restaurant which they want to visit today
+This is a simple service for the company's employees where restaurants can register and provide their daily 
+lunch menus and employees can vote for the restaurant which they want to visit today
+</br>
+In this app exists the following types of users (admin, employee, restaurant_admin).
+Users are authenticated to the system using a password and email. User authorization is 
+implemented on the basis of roles. Registration in the system is available to anyone, upon 
+registration you need to specify the role of the new user (restaurant_admin, employee by 
+default). But the new accounts are not active, they can be activated only by the admin after 
+conducting the necessary checks.
+</br>
+An ordinary employee can only view the restaurant menus available today. He can vote for a menu only once 
+a day, there is a possibility to delete his vote and vote for another menu. He can also view the results 
+of today's votes from the menu.
+</br>
+The restaurant _admin can create only one restaurant for which he is responsible, add, edit, delete dishes 
+that will belong to this restaurant, and add only one menu daily that includes previously added dishes. 
+Also, if necessary, he can remove his establishment from the system.
+</br>
+The admin has full access to all system functions, except for creating a new restaurant.
+</br>
+An example of versioning is implemented for the <code><b>/restaurants/menus/vote-results</b></code> endpoint. 
+From this endpoint, you can get the result in two different forms according to the version 
+of the mobile application that uses this rest api. The current version of the mobile 
+application is stored in a environment variable.
+</br>
+If the version of the mobile application with which the user works is older than the 
+current one, then he will receive the result of voting for the menu in the form of a .png 
+file, if the version is current, then the result will be in JSON format.
+<hr style="margin-top: 0"/>
+<h3>Used technologies</h3>
+<dl>
+  <li>Django + Django REST Framework</li>
+  <li>Simple JWT</li>
+  <li>PostgreSQL</li>
+  <li>Docker + Docker Compose</li>
+  <li>Pytest + Coverage</li>
+</dl>
 <hr style="margin-top: 0"/>
 <h3>Database scheme</h3>
 <img src="wtgt_database.png" alt="database scheme">
