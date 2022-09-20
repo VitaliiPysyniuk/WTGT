@@ -2,6 +2,9 @@
 <h3>Description</h3>
 This is a simple service for the company's employees where restaurants can register and provide their daily lunch menus and employees can vote for the restaurant which they want to visit today
 <hr style="margin-top: 0"/>
+<h3>Database scheme</h3>
+<img src="wtgt_database.png" alt="database scheme">
+<hr style="margin-top: 0"/>
 <h3>Requirements</h3>
 Before running the application on your machine you need to have docker and docker-compose installed. 
 The installation guide you can find <a href="https://docs.docker.com/desktop/">here</a>.
