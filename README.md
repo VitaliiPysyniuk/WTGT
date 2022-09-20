@@ -42,6 +42,5 @@ To have an access to the all function the system you need to create a superuser 
 <code><b>docker exec -it container_id python manage.py createsuperuser </b></code>
 </pre>
 And then enter user email and password
-<hr style="margin-top: 0"/>
-<h3>How to run tests</h3>
+
 
