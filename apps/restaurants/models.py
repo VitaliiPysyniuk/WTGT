@@ -11,7 +11,8 @@ class RestaurantModel(models.Model):
     name = models.CharField(max_length=60, unique=True)
     description = models.CharField(max_length=200)
 
-    administrator = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='restaurant')
+    administrator = models.OneToOneField(UserModel, on_delete=models.CASCADE, primary_key=True,
+                                         related_name='restaurant')
 
 
 class DishModel(models.Model):
@@ -20,6 +21,8 @@ class DishModel(models.Model):
 
     name = models.CharField(max_length=40)
     description = models.CharField(max_length=200)
+    price = models.FloatField(default=1.0)
+    weight = models.IntegerField(default=1)
 
     restaurant = models.ForeignKey(RestaurantModel, on_delete=models.CASCADE, related_name='dishes')
 
@@ -36,7 +39,18 @@ class MenuModel(models.Model):
 class MenuDishAssociateModel(models.Model):
     class Meta:
         db_table = 'menus_dishes'
+        unique_together = ['menu', 'dish']
 
     menu = models.ForeignKey(MenuModel, on_delete=models.CASCADE, related_name='dishes')
     dish = models.ForeignKey(DishModel, on_delete=models.CASCADE, related_name='menus')
+
+
+class VoteModel(models.Model):
+    class Meta:
+        db_table = 'votes'
+        unique_together = ['menu', 'user']
+
+    menu = models.ForeignKey(MenuModel, on_delete=models.CASCADE, related_name='votes')
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='votes')
+
 

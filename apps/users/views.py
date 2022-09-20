@@ -31,7 +31,7 @@ class UserRegisterView(CreateAPIView):
         return super().create(request, *args, **kwargs)
 
 
-class UserUpdateView(UpdateAPIView, DestroyAPIView):
+class UserUpdateDestroyView(UpdateAPIView, DestroyAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserUpdateSerializer
     permission_classes = [IsAuthenticated, IsAdmin]
