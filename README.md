@@ -28,6 +28,36 @@ application is stored in a environment variable.
 If the version of the mobile application with which the user works is older than the 
 current one, then he will receive the result of voting for the menu in the form of a .png 
 file, if the version is current, then the result will be in JSON format.
+Example in JSON format:
+<pre>
+<code><b>
+[
+    {
+        "restaurant": {
+            "id": 8,
+            "name": "Restaurant 1"
+        },
+        "votes_number": 3
+    },
+    {
+        "restaurant": {
+            "id": 9,
+            "name": "Restaurant 2"
+        },
+        "votes_number": 2
+    },
+    {
+        "restaurant": {
+            "id": 13,
+            "name": "Restaurant 3"
+        },
+        "votes_number": 1
+    }
+]
+</b></code>
+</pre>
+Example in .png format:
+<img src="vote-results-20-22-09-20.png" alt="database scheme">
 <hr style="margin-top: 0"/>
 <h3>Used technologies</h3>
 <dl>
