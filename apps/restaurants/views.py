@@ -1,21 +1,19 @@
 from rest_framework.generics import ListAPIView, ListCreateAPIView, UpdateAPIView, DestroyAPIView, \
     get_object_or_404
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import NotFound, ParseError
 from rest_framework import status
 from rest_framework.response import Response
 from django.db import transaction, models
-from django.db.utils import IntegrityError
 from datetime import date
-from django.http import HttpResponse
-import os
 from dotenv import load_dotenv
+import os
+from django.http import HttpResponse
 
 from .models import RestaurantModel, DishModel, MenuModel, VoteModel
-from .serializers import RestaurantSerializer, DishSerializer, MenuSerializer, FullMenuSerializer, \
-    MenuDishAssociateSerializer, VoteSerializer
+from .serializers import RestaurantSerializer, DishSerializer, MenuSerializer, FullMenuSerializer, VoteSerializer
 from ..users.permissions import IsAdmin, IsRestaurantAdmin, IsEmployee, IsAdminOfCertainRestaurantOrSystemAdmin
 from ..users.models import UserRoleChoices
 from .utils import parse_results, build_result_chart
@@ -105,7 +103,6 @@ class MenuListCreateView(ListCreateAPIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs):
-        dishes = request.data.pop('dishes')
         request.data['restaurant'] = kwargs.get('restaurant_id')
 
         existing_menus = MenuModel.objects.all().filter(restaurant=kwargs.get('restaurant_id'), created_at=date.today())
@@ -114,22 +111,13 @@ class MenuListCreateView(ListCreateAPIView):
 
         menu_serializer = self.get_serializer(data=request.data)
         menu_serializer.is_valid(raise_exception=True)
-        menu = menu_serializer.save()
-
-        menu_dishes = [{'dish': dish['dish_id'], 'menu': menu.id} for dish in dishes]
-
-        try:
-            menu_dishes_serializer = MenuDishAssociateSerializer(data=menu_dishes, many=True)
-            menu_dishes_serializer.is_valid(raise_exception=True)
-            menu_dishes_serializer.save()
-        except IntegrityError as e:
-            raise ParseError(detail=e)
+        menu_serializer.save()
 
         return Response(menu_serializer.data, status.HTTP_201_CREATED)
 
 
 class RestaurantMenuListView(ListAPIView):
-    queryset = MenuModel.objects.all()
+    queryset = MenuModel.objects.all().order_by('id')
     serializer_class = FullMenuSerializer
     permission_classes = [IsAuthenticated, IsAdmin | IsEmployee]
 
@@ -148,11 +136,11 @@ class VoteCreateView(ListAPIView, DestroyAPIView):
             'menu': kwargs.get('menu_id')
         }
 
-        existing_menus = MenuModel.objects.all().filter(id=kwargs.get('menu_id'), created_at=date.today())
+        existing_menus = MenuModel.objects.filter(id=kwargs.get('menu_id'), created_at=date.today())
         if len(existing_menus) == 0:
             raise ParseError(detail=f"There no menu with id: {kwargs.get('menu_id')} today.")
 
-        votes = VoteModel.objects.all().filter(user_id=request.user.id, menu__created_at=date.today())
+        votes = VoteModel.objects.filter(user_id=data['user'], voted_at=date.today())
         if len(votes) == 1:
             raise ParseError(detail='You have already voted today.')
 
@@ -191,4 +179,3 @@ class VoteResultView(APIView):
             filepath = build_result_chart(vote_results)
             with open(f'{filepath}.png', "rb") as image:
                 return HttpResponse(image.read(), content_type="image/png")
-
