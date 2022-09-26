@@ -108,5 +108,21 @@ To have an access to the all function the system you need to create a superuser 
 <code><b>docker exec -it container_id python manage.py createsuperuser </b></code>
 </pre>
 And then enter user email and password
-
-
+<h3>How to run test</h3>
+To run tests you have to create a virtual environment where all needed packages will be installed. Create virtual environment
+with the following command (provided example for the Linux OS):
+<pre>
+<code><b>python3 -m venv venv</b></code>
+</pre>
+Then activate it:
+<pre>
+<code><b>source venv/bin/activate</b></code>
+</pre>
+Install all packages from requirements.txt file:
+<pre>
+<code><b>pip install -r requirements.txt</b></code>
+</pre>
+Run tests with PyTest:
+<pre>
+<code><b>pytest</b></code>
+</pre>
