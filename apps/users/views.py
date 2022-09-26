@@ -14,12 +14,10 @@ class UserListView(ListAPIView):
     permission_classes = [IsAuthenticated, IsAdmin]
 
     def get_queryset(self):
-        queryset = self.queryset
         is_active = self.request.query_params.get('is_active', None)
         if is_active is not None:
-            queryset = queryset.filter(is_active=is_active)
-
-        return queryset
+            return UserModel.objects.filter(is_active=is_active)
+        return super().get_queryset()
 
 
 class UserRegisterView(CreateAPIView):

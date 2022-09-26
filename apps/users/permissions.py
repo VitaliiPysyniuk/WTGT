@@ -18,12 +18,6 @@ class IsEmployee(BasePermission):
         return request.user and (request.user.role == UserRoleChoices.EMPLOYEE)
 
 
-# class IsRestaurantAdminOrSystemAdmin(BasePermission):
-#     def has_permission(self, request, view):
-#         return request.user and (request.user.role == UserRoleChoices.RESTAURANT_ADMINISTRATOR or
-#                                  request.user.role == UserRoleChoices.ADMINISTRATOR)
-
-
 class IsAdminOfCertainRestaurantOrSystemAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user and (request.user.role == UserRoleChoices.ADMINISTRATOR

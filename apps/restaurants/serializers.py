@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import RestaurantModel, DishModel, MenuModel, MenuDishAssociateModel, VoteModel
+from .models import RestaurantModel, DishModel, MenuModel, VoteModel
 
 
 class RestaurantSerializer(ModelSerializer):
@@ -15,27 +15,15 @@ class DishSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class MenuDishAssociateSerializer(ModelSerializer):
-    class Meta:
-        model = MenuDishAssociateModel
-        fields = '__all__'
-
-
-class FullMenuDishAssociateSerializer(MenuDishAssociateSerializer):
-    dish = DishSerializer(required=False)
-
-
 class MenuSerializer(ModelSerializer):
-    dishes = MenuDishAssociateSerializer(many=True, required=False)
-
     class Meta:
         model = MenuModel
         fields = '__all__'
-        read_only_fields = ['created_at']
+        extra_kwargs = {'created_at': {'read_only': True}}
 
 
 class FullMenuSerializer(MenuSerializer):
-    dishes = FullMenuDishAssociateSerializer(many=True)
+    dishes = DishSerializer(many=True)
     restaurant = RestaurantSerializer()
 
 

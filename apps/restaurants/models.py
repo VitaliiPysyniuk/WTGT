@@ -34,21 +34,15 @@ class MenuModel(models.Model):
     created_at = models.DateField(auto_now_add=True)
 
     restaurant = models.ForeignKey(RestaurantModel, on_delete=models.CASCADE, related_name='menus')
-
-
-class MenuDishAssociateModel(models.Model):
-    class Meta:
-        db_table = 'menus_dishes'
-        unique_together = ['menu', 'dish']
-
-    menu = models.ForeignKey(MenuModel, on_delete=models.CASCADE, related_name='dishes')
-    dish = models.ForeignKey(DishModel, on_delete=models.CASCADE, related_name='menus')
+    dishes = models.ManyToManyField(DishModel, related_name='menus')
 
 
 class VoteModel(models.Model):
     class Meta:
         db_table = 'votes'
         unique_together = ['menu', 'user']
+
+    voted_at = models.DateField(auto_now_add=True)
 
     menu = models.ForeignKey(MenuModel, on_delete=models.CASCADE, related_name='votes')
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='votes')
